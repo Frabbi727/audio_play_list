@@ -19,7 +19,6 @@ class AudioPlayerView extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             ControlButtons(),
-
                StreamBuilder<PositionData>(
                 stream: audioController.positionDataStream,
                 builder: (context, snapshot) {

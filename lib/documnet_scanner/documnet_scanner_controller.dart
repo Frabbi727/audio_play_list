@@ -28,26 +28,6 @@ class DocumentScannerController extends GetxController{
 
 
 
-  // Future startScan() async {
-  //   try {
-  //     _result = null;
-  //
-  //     _documentScanner = DocumentScanner(
-  //       options: DocumentScannerOptions(
-  //         documentFormat:DocumentFormat.jpeg ,
-  //         mode: ScannerMode.full,
-  //         isGalleryImport: false,
-  //         pageLimit: 1,
-  //       ),
-  //     );
-  //     _result = await _documentScanner?.scanDocument();
-  //     print('result: ${_result?.images.first}');
-  //     await processImage(_result!.images.first);
-  //
-  //   } catch (e) {
-  //     print('Error: $e');
-  //   }
-  // }
   Future getNidFrontImageFromCamera() async {
     fontImageDataAndOcrClear(); // Clear previous data
 
@@ -56,8 +36,9 @@ class DocumentScannerController extends GetxController{
         options: DocumentScannerOptions(
           documentFormat: DocumentFormat.jpeg,
           mode: ScannerMode.full,
-          isGalleryImport: false,
+          isGalleryImport: true,
           pageLimit: 1,
+
         ),
       );
 
@@ -65,13 +46,20 @@ class DocumentScannerController extends GetxController{
 
       if (result != null && result!.images.isNotEmpty) {
 
-        final scannedImagePath = result!.images.first;
-        nidFrontImagePath.value = scannedImagePath;
-        nidFrontImageName.value = scannedImagePath.split('/').last; // Extracts the image name
+        nidFrontImagePath.value = result!.images.first;
+        nidFrontImageName.value = nidFrontImagePath.value.split('/').last;
+     /*   bool fileExists = await File(nidFrontImagePath.value).exists();
+        if (fileExists) {
+          File imageFile =File(nidFrontImagePath.value);
+          print("Image file exists at path: ${nidFrontImagePath.value}");
+          print("Image file exists at : ${imageFile}");
+        } else {
+          print("Image file not found at path: ${nidFrontImagePath.value}");
+        }*/
 
-        Get.back();
 
-        bool processingResult = await processImage(scannedImagePath);
+
+        bool processingResult = await processImageForFrontNid(File(nidFrontImagePath.value));
         if (processingResult) {
           imageIsNotClear.value = false;
           Get.snackbar(
@@ -96,7 +84,7 @@ class DocumentScannerController extends GetxController{
         debugPrint("No document scanned.");
       }
 
-    //  documentScanner.close(); // Close the scanner after use
+      documentScanner.close();
 
     } catch (e) {
       debugPrint("Error during document scanning: $e");
@@ -111,102 +99,62 @@ class DocumentScannerController extends GetxController{
   }
 
 
-/*  Future getNidFrontImageFromCamera() async {
-    fontImageDataAndOcrClear();
-    final ImagePicker picker = ImagePicker();
-    var image = await picker.pickImage(source: ImageSource.camera);
-    try {
-      if (image != null) {
-        nidFrontImagePath.value = image.path;
-        nidFrontImageName.value = image.name;
-        Get.back();
 
-        bool result = await processImage(image);
-        if (result) {
-          imageIsNotClear.value = false;
-          Get.snackbar(
-            "Nice photo",
-            "Take backside of nid",
-            snackPosition: SnackPosition.BOTTOM,
-            backgroundColor: Colors.redAccent,
-            colorText: Colors.white,
-          );
-        } else {
-          imageIsNotClear.value = true;
-          image = null;
-          fontImageDataAndOcrClear();
-          Get.snackbar(
-            "Warning",
-            "Image is not clear or data is incomplete. Please capture the photo again.",
-            snackPosition: SnackPosition.BOTTOM,
-            backgroundColor: Colors.redAccent,
-            colorText: Colors.white,
-          );
-        }
-      } else {
-        debugPrint("No image picked");
-      }
-    } catch (e) {
-      debugPrint("Image from camera exception $e");
-    }
-  }*/
-
-  Future getNidFrontImageFromGallery() async {
-    fontImageDataAndOcrClear();
-    final ImagePicker picker = ImagePicker();
-    final image = await picker.pickImage(source: ImageSource.gallery);
-    try {
-      if (image != null) {
-        nidFrontImagePath.value = image.path;
-        nidFrontImageName.value = image.name;
-        Get.back();
-        //  await processImage(image);
-      } else {
-        print("No image picked");
-      }
-    } catch (e) {
-      debugPrint("Image from gallery exception $e");
-    }
-  }
 
   Future getNidBackImageFromCamera() async {
-    final ImagePicker picker = ImagePicker();
-    final image = await picker.pickImage(source: ImageSource.camera);
+
     try {
-      if (image != null) {
-        nidBackImagePath.value = image.path;
-        nidBackImageName.value = image.name;
-        Get.back();
+      final DocumentScanner documentScanner = DocumentScanner(
+        options: DocumentScannerOptions(
+          documentFormat: DocumentFormat.jpeg,
+          mode: ScannerMode.full,
+          isGalleryImport: true,
+          pageLimit: 1,
+
+        ),
+      );
+
+      result = await documentScanner.scanDocument();
+
+      if (result != null && result!.images.isNotEmpty) {
+
+        nidBackImagePath.value = result!.images.first;
+        nidBackImageName.value = nidBackImagePath.value.split('/').last;
+        bool fileExists = await File(nidBackImagePath.value).exists();
+        if (fileExists) {
+          File imageFile = File(nidBackImagePath.value);
+          print("Image file exists at path: ${nidBackImagePath.value}");
+          print("Image file exists at : ${imageFile}");
+        } else {
+          print("Image file not found at path: ${nidBackImagePath.value}");
+        }
+        Get.snackbar(
+          "Nice photo",
+          "Take the backside of NID",
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+        );
+
+
       } else {
-        print("No image picked");
+        debugPrint("No document scanned.");
       }
+
+      documentScanner.close();
     } catch (e) {
       debugPrint("Image from camera exception $e");
     }
   }
 
-  Future getNidBackImageFromGallery() async {
-    final ImagePicker picker = ImagePicker();
-    final image = await picker.pickImage(source: ImageSource.gallery);
-    try {
-      if (image != null) {
-        nidBackImagePath.value = image.path;
-        nidBackImageName.value = image.name;
-        Get.back();
-      } else {
-        print("No image picked");
-      }
-    } catch (e) {
-      debugPrint("Image from gallery exception $e");
-    }
-  }
 
-  Future<bool> processImage(String image) async {
+
+  Future<bool> processImageForFrontNid(File image) async {
     debugPrint("Processing image");
-    debugPrint("Camera Image path ${image}");
+    debugPrint("Camera Image path $image");
     isLoading.value = true;
 
-    final inputImage = InputImage.fromFilePath(image);
+    final inputImage = InputImage.fromFilePath(image.path);
     debugPrint("TAG 1: ${inputImage.filePath}");
 
     try {

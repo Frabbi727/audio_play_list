@@ -41,6 +41,9 @@ dependencies:
   just_audio_mpv: ^0.1.6
   just_audio_windows: ^0.2.0
   just_audio: ^0.9.42
+  image_picker: ^1.1.2
+  google_mlkit_text_recognition: ^0.14.0
+  google_mlkit_document_scanner: ^0.3.0
 
 
 dev_dependencies:

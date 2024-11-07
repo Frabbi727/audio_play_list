@@ -14,7 +14,7 @@ class PlayListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Audio Playlist')),
+      appBar: AppBar(title: Text('Audio Playlist'),surfaceTintColor: Colors.transparent,),
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -112,8 +112,8 @@ class PlayListView extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(
-              height: 240.0,
+            Expanded(
+            //  height: 240.0,
               child: StreamBuilder<SequenceState?>(
                 stream: controller.player.sequenceStateStream,
                 builder: (context, snapshot) {

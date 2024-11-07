@@ -22,6 +22,7 @@ class DocumentScannerController extends GetxController{
   var extractedName = ''.obs;
   var extractedDateOfBirth = ''.obs;
   var extractedIdNo = ''.obs;
+  var extractedBlood = ''.obs;
   RxBool imageIsNotClear = false.obs;
   DocumentScanner? documentScanner;
   DocumentScanningResult? result;
@@ -70,6 +71,7 @@ class DocumentScannerController extends GetxController{
             colorText: Colors.white,
           );
         } else {
+
           imageIsNotClear.value = true;
           fontImageDataAndOcrClear();
           Get.snackbar(
@@ -128,13 +130,28 @@ class DocumentScannerController extends GetxController{
         } else {
           print("Image file not found at path: ${nidBackImagePath.value}");
         }
-        Get.snackbar(
-          "Nice photo",
-          "Take the backside of NID",
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.green,
-          colorText: Colors.white,
-        );
+      /*  bool processingResult = await processImageForBackNid(File(nidBackImagePath.value));
+
+        if (processingResult) {
+          imageIsNotClear.value = false;
+          Get.snackbar(
+            "Nice photo",
+            "Take the backside of NID",
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Colors.green,
+            colorText: Colors.white,
+          );
+        } else {
+          imageIsNotClear.value = true;
+          fontImageDataAndOcrClear();
+          Get.snackbar(
+            "Warning",
+            "Image is not clear or data is incomplete. Please capture the photo again.",
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Colors.redAccent,
+            colorText: Colors.white,
+          );
+        };*/
 
 
       } else {
@@ -198,9 +215,50 @@ class DocumentScannerController extends GetxController{
     }
   }
 
+  Future<bool> processImageForBackNid(File image) async {
+    debugPrint("Processing image");
+    debugPrint("Camera Image path $image");
+    isLoading.value = true;
+
+    final inputImage = InputImage.fromFilePath(image.path);
+    debugPrint("TAG 1: ${inputImage.filePath}");
+
+    try {
+      final RecognizedText recognizedTextResult =
+      await textRecognizer.processImage(inputImage);
+      debugPrint("TAG 2: ${recognizedTextResult.text}");
+      recognizedText.value = recognizedTextResult.text;
+
+      debugPrint("OCR value: ${recognizedText.value}");
+
+      // Extract fields using regular expressions
+      final extracted =
+      RegExp(r'Blood Group:\s*(.*)').firstMatch(recognizedText.value);
+      extractedBlood.value = extracted?.group(1)?.trim() ?? '';
+
+
+      debugPrint("Extracted Name: ${extractedBlood.value}");
+
+
+      if (extractedBlood.value.isEmpty) {
+        return false;
+      } else {
+        return true;
+      }
+
+    } catch (e) {
+      debugPrint("Error during OCR: $e");
+      recognizedText.value = "Error during OCR: ${e.toString()}";
+      return false;
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
   void fontImageDataAndOcrClear() {
     debugPrint("Clear method called");
-    nidBackImagePath.value = "";
+    result?.images.clear();
+    nidFrontImagePath.value = "";
     nidFrontImageName.value = "";
     extractedName.value = "";
     extractedDateOfBirth.value = '';
@@ -210,6 +268,8 @@ class DocumentScannerController extends GetxController{
   @override
   void onClose() {
     textRecognizer.close();
+    fontImageDataAndOcrClear();
+    documentScanner?.close();
     super.onClose();
   }
 }

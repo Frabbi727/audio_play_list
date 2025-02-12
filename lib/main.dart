@@ -1,7 +1,10 @@
 import 'package:audio_player/audio_player/audio_bindings.dart';
 import 'package:audio_player/documnet_scanner/documnet_scanner_bindings.dart';
+import 'package:audio_player/face_and_obj_detection/face_and_obj_detection_bindings.dart';
+import 'package:audio_player/face_and_obj_detection/face_and_obj_detection_view.dart';
 import 'package:audio_player/play_list/audio_play_list_view.dart';
 import 'package:audio_player/play_list/play_list_bindings.dart';
+import 'package:audio_player/reuasble_widgets/appaly_leave_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -24,8 +27,8 @@ class MyApp extends StatelessWidget {
       getPages: [
         GetPage(
             name: "/",
-            page: () => DocumentScannerView (),
-            binding: DocumnetScannerBindings(),
+            page: () => FaceAndObjDetectionView (),
+            binding: FaceAndObjDetectionBindings(),
         ),
       ],
 

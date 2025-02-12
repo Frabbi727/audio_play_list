@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_mlkit_document_scanner/google_mlkit_document_scanner.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
-import 'package:image_picker/image_picker.dart';
+
 
 class DocumentScannerController extends GetxController{
   final textRecognizer = TextRecognizer();
@@ -182,15 +182,15 @@ class DocumentScannerController extends GetxController{
 
       debugPrint("OCR value: ${recognizedText.value}");
 
-      // Extract fields using regular expressions
+      // Extract Nam
       final nameMatch =
       RegExp(r'Name:\s*(.*)').firstMatch(recognizedText.value);
       extractedName.value = nameMatch?.group(1)?.trim() ?? '';
-
+// don
       final dobMatch = RegExp(r'Date of Birth:\s*(\d{2} \w+ \d{4})')
           .firstMatch(recognizedText.value);
       extractedDateOfBirth.value = dobMatch?.group(1)?.trim() ?? '';
-
+// id
       final idMatch =
       RegExp(r'ID NO:\s*(\d+)').firstMatch(recognizedText.value);
       extractedIdNo.value = idMatch?.group(1)?.trim() ?? '';

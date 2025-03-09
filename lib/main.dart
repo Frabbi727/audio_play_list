@@ -662,6 +662,7 @@ class NavigationControls extends StatelessWidget {
   }
 }*/
 
+/*
 import 'package:audio_player/audio_player/audio_bindings.dart';
 import 'package:audio_player/documnet_scanner/documnet_scanner_bindings.dart';
 import 'package:audio_player/face_and_obj_detection/face_and_obj_detection_bindings.dart';
@@ -695,7 +696,7 @@ class MyApp extends StatelessWidget {
       getPages: [
         GetPage(
             name: "/",
-            page: () => PlayListView (),
+            page: () {},
 
         ),
       ],
@@ -703,4 +704,67 @@ class MyApp extends StatelessWidget {
 
     );
   }
+}
+*/
+
+
+import 'package:audio_player/pdf_with_letter_head/pdf_generator.dart';
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'dart:io'; // for File operations
+
+// Assuming HomePageSharePdf and SalaryInfo are already defined
+
+class MyHomePage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    // Example salary data
+    List<SalaryInfo> salaryData = [
+      SalaryInfo(title: "Basic Salary", amount: 50000),
+      SalaryInfo(title: "Housing Allowance", amount: 10000),
+      SalaryInfo(title: "Transport Allowance", amount: 5000),
+      SalaryInfo(title: "Medical Allowance", amount: 2000),
+      SalaryInfo(title: "Bonus", amount: 3000),
+      SalaryInfo(title: "Deductions", amount: -4000),
+      SalaryInfo(title: "Net Salary", amount: 63000), // Example calculation
+    ];
+
+
+
+    return MaterialApp(
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        useMaterial3: true,
+      ),
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text('Salary PDF Generator'),
+        ),
+        body: Center(
+          child: ElevatedButton(
+            onPressed: () async {
+              try {
+
+                await HomePageSharePdf.generateDynamicPDF(
+                  context,
+                  salaryData,
+                  'Salary Report',
+
+                );
+              } catch (e) {
+                // Handle any errors
+                print('Error generating PDF: $e');
+              }
+            },
+            child: Text('Generate PDF'),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+void main() {
+  runApp(MyHomePage());
 }

@@ -662,11 +662,12 @@ class NavigationControls extends StatelessWidget {
   }
 }*/
 
-/*
+
 import 'package:audio_player/audio_player/audio_bindings.dart';
 import 'package:audio_player/documnet_scanner/documnet_scanner_bindings.dart';
 import 'package:audio_player/face_and_obj_detection/face_and_obj_detection_bindings.dart';
 import 'package:audio_player/face_and_obj_detection/face_and_obj_detection_view.dart';
+import 'package:audio_player/multi_type_file/multy_type_file.dart';
 import 'package:audio_player/play_list/audio_play_list_view.dart';
 import 'package:audio_player/play_list/play_list_bindings.dart';
 import 'package:audio_player/reuasble_widgets/appaly_leave_screen.dart';
@@ -693,22 +694,17 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      getPages: [
-        GetPage(
-            name: "/",
-            page: () {},
+      home: FileUploadScreen(),
 
-        ),
-      ],
 
 
     );
   }
 }
-*/
 
 
-import 'package:audio_player/pdf_with_letter_head/pdf_generator.dart';
+
+/*import 'package:audio_player/pdf_with_letter_head/pdf_generator.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'dart:io'; // for File operations
@@ -767,4 +763,4 @@ class MyHomePage extends StatelessWidget {
 
 void main() {
   runApp(MyHomePage());
-}
+}*/

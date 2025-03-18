@@ -44,10 +44,10 @@ class HomePageSharePdf {
               if (backgroundImage != null)
                 pw.Positioned.fill(
                   child: pw.Opacity(
-                    opacity: 0.2, // **✅ Light transparency for readability**
+                    opacity: 1, // **✅ Light transparency for readability**
                     child: pw.Image(
                       backgroundImage,
-                      fit: pw.BoxFit.cover, // **Covers entire page**
+                      fit: pw.BoxFit.fill, // **Covers entire page**
                     ),
                   ),
                 ),
